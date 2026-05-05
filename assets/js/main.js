@@ -43,6 +43,99 @@ function initStickyHeaderState() {
   window.addEventListener("scroll", sync, { passive: true });
 }
 
+function initDesktopMenuIndicator() {
+  const menuEl = document.querySelector(".menu");
+  if (!menuEl) return;
+  const links = Array.from(menuEl.querySelectorAll("a"));
+  if (!links.length) return;
+
+  const mobileMq = window.matchMedia("(max-width: 860px)");
+  let indicator = null;
+
+  const getActiveLink = () => {
+    return menuEl.querySelector("a.is-current, a.active") || links[0] || null;
+  };
+
+  const placeIndicator = (target, immediate = false) => {
+    if (!indicator || !target) return;
+    const menuRect = menuEl.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    const x = targetRect.left - menuRect.left;
+    const width = targetRect.width;
+
+    if (immediate) {
+      indicator.style.transition = "none";
+      indicator.style.transform = `translateX(${x}px)`;
+      indicator.style.width = `${width}px`;
+      indicator.offsetHeight;
+      indicator.style.removeProperty("transition");
+      return;
+    }
+
+    indicator.style.transform = `translateX(${x}px)`;
+    indicator.style.width = `${width}px`;
+  };
+
+  const syncIndicatorState = (immediate = false) => {
+    if (mobileMq.matches) {
+      menuEl.classList.remove("menu-indicator-enabled");
+      if (indicator) {
+        indicator.remove();
+        indicator = null;
+      }
+      return;
+    }
+
+    if (!indicator) {
+      indicator = document.createElement("span");
+      indicator.className = "menu-indicator";
+      menuEl.prepend(indicator);
+    }
+
+    menuEl.classList.add("menu-indicator-enabled");
+    const activeLink = getActiveLink();
+    if (activeLink) {
+      placeIndicator(activeLink, immediate);
+    }
+  };
+
+  links.forEach((link) => {
+    link.addEventListener("mouseenter", () => {
+      if (mobileMq.matches) return;
+      placeIndicator(link);
+    });
+
+    link.addEventListener("focus", () => {
+      if (mobileMq.matches) return;
+      placeIndicator(link);
+    });
+  });
+
+  menuEl.addEventListener("mouseleave", () => {
+    if (mobileMq.matches) return;
+    const activeLink = getActiveLink();
+    if (activeLink) placeIndicator(activeLink);
+  });
+
+  menuEl.addEventListener("focusout", () => {
+    if (mobileMq.matches) return;
+    window.requestAnimationFrame(() => {
+      if (menuEl.contains(document.activeElement)) return;
+      const activeLink = getActiveLink();
+      if (activeLink) placeIndicator(activeLink);
+    });
+  });
+
+  window.addEventListener("resize", () => syncIndicatorState(true), { passive: true });
+  if (typeof mobileMq.addEventListener === "function") {
+    mobileMq.addEventListener("change", () => syncIndicatorState(true));
+  } else if (typeof mobileMq.addListener === "function") {
+    mobileMq.addListener(() => syncIndicatorState(true));
+  }
+
+  syncIndicatorState(true);
+}
+
 if (menuToggle && menu) {
   const closeMenu = () => {
     menu.classList.remove("open");
@@ -212,12 +305,41 @@ function initSupportCardHover() {
   });
 }
 
+function initFloatingActions() {
+  if (document.querySelector(".floating-actions")) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "floating-actions";
+
+  const quoteSource = document.querySelector(".nav-wrap > .btn, .topbar .btn-primary");
+  const quoteBtn = document.createElement("a");
+  quoteBtn.className = "floating-btn floating-btn-quote";
+  quoteBtn.href = quoteSource?.getAttribute("href") || "contact.html";
+  quoteBtn.textContent = quoteSource?.textContent?.trim() || "Nhan bao gia";
+  quoteBtn.setAttribute("aria-label", quoteBtn.textContent);
+
+  const topBtn = document.createElement("button");
+  topBtn.type = "button";
+  topBtn.className = "floating-btn floating-btn-top";
+  topBtn.setAttribute("aria-label", "Len dau trang");
+  topBtn.innerHTML = '<i class="bi bi-arrow-up" aria-hidden="true"></i>';
+  topBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  wrapper.appendChild(quoteBtn);
+  wrapper.appendChild(topBtn);
+  document.body.appendChild(wrapper);
+}
+
 function initPage() {
   initNavActiveState();
   initStickyHeaderState();
+  initDesktopMenuIndicator();
   wireImageFallbacks();
   initHeroSlider();
   initSupportCardHover();
+  initFloatingActions();
 }
 
 if (document.readyState === "loading") {

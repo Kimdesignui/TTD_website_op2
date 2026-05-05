@@ -114,6 +114,8 @@ img {
 }
 
 .menu {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 1.4rem;
@@ -126,8 +128,29 @@ img {
   background: rgba(255, 255, 255, 0.24);
 }
 
+.menu-indicator {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 0;
+  height: calc(100% - 8px);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 18px rgba(29, 68, 126, 0.16);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transform: translateX(0);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), width 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.menu.menu-indicator-enabled .menu-indicator {
+  opacity: 1;
+}
+
 .menu a {
   position: relative;
+  z-index: 1;
   font-size: 13px;
   font-weight: 500;
   color: #475569;
@@ -154,6 +177,13 @@ img {
 .menu a.active::after,
 .menu a.is-current::after {
   transform: none;
+}
+
+.menu.menu-indicator-enabled a:hover,
+.menu.menu-indicator-enabled a.active,
+.menu.menu-indicator-enabled a.is-current {
+  background: transparent;
+  box-shadow: none;
 }
 
 .menu-toggle {
@@ -772,6 +802,59 @@ main section {
   font-size: 14px;
 }
 
+.floating-actions {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 260;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.floating-btn {
+  border: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.88);
+  color: #114c9d;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 24px rgba(19, 58, 119, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.floating-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(19, 58, 119, 0.24);
+}
+
+.floating-btn-top {
+  font-size: 1.1rem;
+}
+
+.floating-btn-quote {
+  display: none;
+  width: auto;
+  height: auto;
+  min-height: 44px;
+  padding: 0.58rem 0.9rem;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #1475eb, #0063d8);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
 .image-cover {
   width: 100%;
   height: 100%;
@@ -919,7 +1002,7 @@ main section {
 @media (max-width: 860px) {
   .topbar {
     top: 8px;
-    padding-bottom: 8px;
+    padding: 0 10px 8px;
   }
 
   .container {
@@ -929,11 +1012,29 @@ main section {
   .nav-wrap {
     min-height: 72px;
     padding: 10px 12px;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: "brand spacer menu";
   }
 
   .menu-toggle {
     display: inline-flex;
-    justify-self: center;
+    justify-self: end;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 12px;
+    font-size: 0;
+    line-height: 1;
+    z-index: 3;
+  }
+
+  .menu-toggle::before {
+    content: "\F479";
+    font-family: "bootstrap-icons";
+    font-size: 1.36rem;
+    color: #1f4f93;
   }
 
   .menu {
@@ -957,6 +1058,10 @@ main section {
     display: flex;
   }
 
+  .menu-indicator {
+    display: none;
+  }
+
   .menu a {
     padding: 10px 8px;
     border-bottom: 0;
@@ -973,6 +1078,14 @@ main section {
 
   .brand-copy {
     display: none;
+  }
+
+  .nav-wrap > .btn {
+    display: none;
+  }
+
+  .floating-btn-quote {
+    display: inline-flex;
   }
 
   .hero-banner {
