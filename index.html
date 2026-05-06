@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="vi">
 <head>
   <meta charset="utf-8">
@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/home-bootstrap.css">
 </head>
-<body>
+<body class="home-page">
   <header class="topbar">
     <div class="container nav-wrap">
       <a class="brand" href="index.html" aria-label="TTD Home">
@@ -185,17 +185,23 @@
         <div class="col-lg-4">
           <h4>KẾT NỐI VỚI CHÚNG TÔI</h4>
           <p class="social-title">Mạng xã hội</p>
-          <a class="social-link" href="https://www.facebook.com/ttddovlon" target="_blank" rel="noopener" aria-label="Facebook TTD"><i class="bi bi-hand-thumbs-up-fill"></i></a>
+          <div class="social-links">
+            <a class="social-chip" href="https://www.facebook.com/ttddovlon" target="_blank" rel="noopener" aria-label="Facebook">
+              <img src="assets/img/facebook_icon.svg" alt="Facebook">
+            </a>
+            <a class="social-chip" href="#" aria-label="TikTok">
+              <img src="assets/img/TikTok_Icon_Black_Circle.svg" alt="TikTok">
+            </a>
+          </div>
           <p class="subscribe-title">Đăng ký nhận báo giá nhanh</p>
           <p class="subscribe-copy">Để lại thông tin để nhận tư vấn và báo giá trong thời gian sớm nhất:</p>
-          <form class="d-flex flex-column flex-sm-row gap-2" action="#" method="post">
+          <form class="quick-quote" action="#" method="post">
             <label for="quickQuote" class="visually-hidden">Email hoặc số điện thoại</label>
             <input id="quickQuote" type="text" class="form-control" placeholder="Email / Số điện thoại">
-            <button class="btn btn-info text-white fw-semibold px-4" type="submit">Nhận báo giá</button>
+            <button class="btn btn-primary" type="submit">Nhận báo giá</button>
           </form>
         </div>
       </div>
-      <hr>
       <p class="copyright mb-0">© 2026 TTD. All rights reserved.</p>
     </div>
   </footer>

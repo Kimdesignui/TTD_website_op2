@@ -466,14 +466,12 @@ body {
 .site-footer .form-control {
   border: 1px solid #bcc8da;
   border-radius: 1rem;
-  min-height: 56px;
   font-size: 0.875rem;
   color: #526075;
 }
 
 .site-footer .btn-info {
   border-radius: 1rem;
-  min-height: 56px;
   background: #0ea5e9;
   border-color: #0ea5e9;
   font-size: 0.875rem;

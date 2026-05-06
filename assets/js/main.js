@@ -14,7 +14,8 @@ function normalizePagePath(href) {
 }
 
 function initNavActiveState() {
-  const currentPage = normalizePagePath(window.location.href) || "index.html";
+  const rawPage = normalizePagePath(window.location.href) || "index.html";
+  const currentPage = rawPage.startsWith("news-") ? "news.html" : rawPage;
   const navLinks = document.querySelectorAll(".menu a, .navbar-nav .nav-link");
   if (!navLinks.length) return;
 
